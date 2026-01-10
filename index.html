@@ -324,30 +324,39 @@ footer {
 <a class="whatsapp" href="https://wa.me/917015700961" target="_blank">💬</a>
 
 <script>
-// Volunteer Form Script
-let members = JSON.parse(localStorage.getItem("members")) || [];
 const list = document.getElementById("memberList");
-function renderMembers(){
-    list.innerHTML = "";
-    members.forEach(m => {
-        let li = document.createElement("li");
-        li.textContent = `${m.name} (${m.interest})`;
-        list.appendChild(li);
-    });
+const BACKEND_URL = "PASTE_BACKEND_URL_HERE";
+
+async function loadMembers() {
+  const res = await fetch(BACKEND_URL + "/members");
+  const data = await res.json();
+  list.innerHTML = "";
+  data.forEach(m => {
+    const li = document.createElement("li");
+    li.textContent = `${m.name} (${m.interest}) | ID: ${m.memberId}`;
+    list.appendChild(li);
+  });
 }
-renderMembers();
-document.getElementById("joinForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    let member = {
-        name: document.getElementById("name").value,
-        mobile: document.getElementById("mobile").value,
-        interest: document.getElementById("interest").value
-    };
-    members.push(member);
-    localStorage.setItem("members", JSON.stringify(members));
-    renderMembers();
-    this.reset();
-    alert("Thank you for joining Ma Indrawti Devi Nari Shakti Foundation!");
+
+loadMembers();
+
+document.getElementById("joinForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const res = await fetch(BACKEND_URL + "/join", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      mobile: document.getElementById("mobile").value,
+      interest: document.getElementById("interest").value
+    })
+  });
+
+  const data = await res.json();
+  alert("Member ID: " + data.memberId);
+  loadMembers();
+  e.target.reset();
 });
 </script>
 
