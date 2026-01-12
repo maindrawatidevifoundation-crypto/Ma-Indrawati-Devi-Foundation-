@@ -269,6 +269,97 @@ footer {
 </body>
 </html>
 </section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma Indrawti Devi Nari Shakti Foundation</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:system-ui, sans-serif; }
+body { background:#f5f7fb; color:#1f2933; line-height:1.6; padding:20px;}
+h1,h2 { margin-bottom:15px; }
+input, button { padding:10px; margin:5px 0; width:100%; max-width:400px; }
+button { cursor:pointer; background:#0f766e; color:white; border:none; border-radius:5px;}
+ul { list-style:none; margin-top:10px;}
+li { padding:5px 0; border-bottom:1px solid #ccc;}
+.container { max-width:800px; margin:auto; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Ma Indrawti Devi Nari Shakti Foundation</h1>
+
+  <!-- Add Member Form -->
+  <h2>Join Our NGO</h2>
+  <form id="memberForm">
+    <input type="text" id="name" placeholder="Full Name" required><br>
+    <input type="text" id="role" placeholder="Role (e.g., Secretary)" required><br>
+    <button type="submit">Add Member</button>
+  </form>
+
+  <!-- Members List -->
+  <h2>Members List</h2>
+  <ul id="memberList"></ul>
+</div>
+
+<script>
+const BACKEND_URL = "https://indufoundation-backend-11.onrender.com"; // Updated backend URL
+
+// -------- Load members from backend --------
+async function loadMembers() {
+  try {
+    const res = await fetch(BACKEND_URL + "/members");
+    const members = await res.json();
+
+    const list = document.getElementById("memberList");
+    list.innerHTML = "";
+
+    members.forEach(m => {
+      const li = document.createElement("li");
+      li.textContent = `${m.name} | ${m.role} | ${m.memberId}`;
+      list.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Error loading members:", err);
+  }
+}
+
+// -------- Add new member --------
+document.getElementById("memberForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const role = document.getElementById("role").value;
+
+  try {
+    const res = await fetch(BACKEND_URL + "/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, role })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert(`Member added successfully! Member ID: ${data.memberId}`);
+      document.getElementById("memberForm").reset();
+      loadMembers(); // update list automatically
+    } else {
+      alert(data.message || "Error adding member");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// -------- Load members on page load --------
+window.onload = loadMembers;
+</script>
+
+</body>
+</html>
+
 
 <!-- DONATION -->
 <section>
