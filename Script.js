@@ -1,17 +1,17 @@
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
-// Load members on page load
+// Load members from backend
 async function loadMembers() {
   try {
     const res = await fetch(BACKEND_URL + "/members");
-    const data = await res.json();
+    const members = await res.json();
 
     const list = document.getElementById("memberList");
     list.innerHTML = "";
 
-    data.forEach(m => {
+    members.forEach(m => {
       const li = document.createElement("li");
-      li.innerHTML = `<b>${m.name}</b> — ${m.interest}`;
+      li.textContent = `${m.name} (${m.interest})`;
       list.appendChild(li);
     });
   } catch (err) {
@@ -19,7 +19,7 @@ async function loadMembers() {
   }
 }
 
-// Submit join form
+// Handle join form submission
 document.getElementById("joinForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -37,7 +37,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (data.success) {
-      alert("🎉 Joined successfully!\nMember ID: " + data.memberId);
+      alert("🎉 Joined successfully! Member ID: " + data.memberId);
       document.getElementById("joinForm").reset();
       loadMembers();
     } else {
@@ -49,5 +49,4 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
 });
 
 // Initial load
-loadMembers();
-
+window.onload = loadMembers;
