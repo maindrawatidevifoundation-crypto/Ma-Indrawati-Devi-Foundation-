@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Ma Indrawti Devi Nari Shakti Foundation</title>
+<style>
+body { font-family: system-ui, sans-serif; background:#f5f7fb; padding:20px; color:#1f2933; }
+h1 { color:#0f766e; text-align:center; margin-bottom:20px; }
+.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.05); }
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th, td { padding:10px; border:1px solid #ccc; text-align:left; }
+th { background:#0f766e; color:#fff; }
+select, button { padding:8px; margin-top:10px; border-radius:5px; }
+button { background:#0f766e; color:white; border:none; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Admin Panel - Joined Members</h1>
+
+<label for="filterInterest">Filter by Interest:</label>
+<select id="filterInterest">
+  <option value="">All</option>
+  <option>Teaching</option>
+  <option>Yoga</option>
+  <option>Event Support</option>
+  <option>Office Work</option>
+</select>
+<button id="downloadCsv">Download CSV</button>
+
+<table id="memberTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Mobile</th>
+      <th>Interest</th>
+      <th>Member ID</th>
+      <th>Joined At</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
