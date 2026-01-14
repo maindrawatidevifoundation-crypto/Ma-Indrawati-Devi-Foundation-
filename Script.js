@@ -1,25 +1,36 @@
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
-// Load members from backend
 async function loadMembers() {
   try {
     const res = await fetch(BACKEND_URL + "/members");
     const members = await res.json();
 
-    const list = document.getElementById("memberList");
-    list.innerHTML = "";
+    const tbody = document.querySelector("#memberTable tbody");
+    tbody.innerHTML = ""; // Clear old rows
+
+    if (members.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="4" style="text-align:center; padding:8px;">No members joined yet.</td>`;
+      tbody.appendChild(row);
+      return;
+    }
 
     members.forEach(m => {
-      const li = document.createElement("li");
-      li.textContent = `${m.name} (${m.interest})`;
-      list.appendChild(li);
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td style="padding:8px; border:1px solid #ccc;">${m.name}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${m.mobile}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${m.interest}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${m.memberId}</td>
+      `;
+      tbody.appendChild(row);
     });
   } catch (err) {
     console.error("Error loading members:", err);
   }
 }
 
-// Handle join form submission
+// Form submission
 document.getElementById("joinForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -37,16 +48,18 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (data.success) {
-      alert("🎉 Joined successfully! Member ID: " + data.memberId);
+      alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
       document.getElementById("joinForm").reset();
-      loadMembers();
+      loadMembers(); // Reload table automatically
     } else {
       alert("❌ " + data.message);
     }
   } catch (err) {
     alert("❌ Server error");
+    console.error(err);
   }
 });
 
-// Initial load
+// Load members on page load
 window.onload = loadMembers;
+      
