@@ -63,3 +63,4 @@ document.getElementById("downloadCsv").addEventListener("click", () => {
 
 // Load members on page load
 window.onload = loadMembers;
+    
