@@ -1,57 +1,53 @@
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
+// Ensure JS loads
+console.log("✅ Script Connected");
+
+// -------- Load Members and Display --------
+async function loadMembers() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/members`);
+    const members = await res.json();
+
+    const tbody = document.getElementById("membersTableBody");
+    tbody.innerHTML = ""; // Clear previous rows
+
+    if (!members.length) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="4" style="text-align:center; padding:8px;">No members joined yet.</td>`;
+      tbody.appendChild(row);
+      return;
+    }
+
+    members.forEach(m => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td style="padding:8px; border:1px solid #ccc;">${m.name}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${m.mobile}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${m.interest}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${m.memberId}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error("❌ Error loading members:", err);
+  }
+}
+
+// -------- Join Form Submit --------
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("joinForm");
-  const tableBody = document.getElementById("membersTableBody");
+  if (!form) return;
 
-  // Safety check
-  if (!form || !tableBody) {
-    console.error("Form or Table body not found!");
-    return;
-  }
-
-  // Load members from backend
-  async function loadMembers() {
-    try {
-      const res = await fetch(`${BACKEND_URL}/members`);
-      if (!res.ok) throw new Error("Network response not OK");
-
-      const members = await res.json();
-
-      tableBody.innerHTML = "";
-
-      if (!members.length) {
-        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No members yet</td></tr>`;
-        return;
-      }
-
-      members.forEach(m => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${m.name}</td>
-          <td>${m.mobile}</td>
-          <td>${m.interest}</td>
-          <td>${m.memberId}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-
-    } catch (err) {
-      console.error("Error fetching members:", err);
-      tableBody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Error loading members</td></tr>`;
-    }
-  }
-
-  // Handle form submission
   form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Stop page reload
 
     const name = document.getElementById("name").value.trim();
     const mobile = document.getElementById("mobile").value.trim();
     const interest = document.getElementById("interest").value;
 
     if (!name || !mobile || !interest) {
-      alert("Please fill all fields");
+      alert("⚠️ Please fill all fields");
       return;
     }
 
@@ -67,17 +63,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.success) {
         alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
         form.reset();
-        loadMembers(); // Reload table immediately
+        loadMembers(); // Reload table
       } else {
         alert("❌ " + data.message);
       }
 
     } catch (err) {
-      console.error("Server error:", err);
+      console.error(err);
       alert("❌ Server error. Try again later.");
     }
   });
 
-  // Initial load
+  // Load members on page load
   loadMembers();
 });
