@@ -28,9 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch(`${BACKEND_URL}/join`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, mobile, interest })
       });
 
@@ -39,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.success) {
         alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
         form.reset();
-        loadMembers(); // 👈 MEMBERS TABLE UPDATE
+        loadMembers(); // 👈 table refresh after submit
       } else {
         alert("❌ " + data.message);
       }
@@ -58,6 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${BACKEND_URL}/members`);
       const members = await res.json();
 
+      console.log("Members loaded:", members); // Debug
+
       const tbody = document.getElementById("membersTableBody");
       if (!tbody) {
         console.warn("membersTableBody not found");
@@ -69,11 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
       members.forEach((m, index) => {
         const row = `
           <tr>
-            <td>${index + 1}</td>
-            <td>${m.name}</td>
-            <td>${m.mobile}</td>
-            <td>${m.interest}</td>
-            <td>${m.memberId}</td>
+            <td style="padding:8px; border:1px solid #ccc;">${m.name}</td>
+            <td style="padding:8px; border:1px solid #ccc;">${m.mobile}</td>
+            <td style="padding:8px; border:1px solid #ccc;">${m.interest}</td>
+            <td style="padding:8px; border:1px solid #ccc;">${m.memberId}</td>
           </tr>
         `;
         tbody.innerHTML += row;
@@ -84,6 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // INITIAL CALL
+  // 🔹 Initial load
   loadMembers();
 });
