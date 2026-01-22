@@ -1,79 +1,82 @@
-const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
+const BASE_URL = "https://indufoundation-backend-11.onrender.com";
 
-// Ensure JS loads
-console.log("✅ Script Connected");
+/* =======================
+   JOIN FORM
+======================= */
+document.getElementById("joinForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-// -------- Load Members and Display --------
+  const data = {
+    name: document.getElementById("name").value,
+    mobile: document.getElementById("mobile").value,
+    interest: document.getElementById("interest").value
+  };
+
+  try {
+    const res = await fetch(`${BASE_URL}/join`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    document.getElementById("joinMsg").innerText =
+      result.message || "Joined successfully ✅";
+
+    document.getElementById("joinForm").reset();
+    loadMembers(); // auto refresh table
+  } catch (err) {
+    document.getElementById("joinMsg").innerText = "Error joining ❌";
+  }
+});
+
+/* =======================
+   LOAD MEMBERS
+======================= */
 async function loadMembers() {
   try {
-    const res = await fetch(`${BACKEND_URL}/members`);
+    const res = await fetch(`${BASE_URL}/members`);
     const members = await res.json();
 
-    const tbody = document.getElementById("membersTableBody");
-    tbody.innerHTML = ""; // Clear previous rows
-
-    if (!members.length) {
-      const row = document.createElement("tr");
-      row.innerHTML = `<td colspan="4" style="text-align:center; padding:8px;">No members joined yet.</td>`;
-      tbody.appendChild(row);
-      return;
-    }
+    const table = document.getElementById("membersTable");
+    table.innerHTML = "";
 
     members.forEach(m => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td style="padding:8px; border:1px solid #ccc;">${m.name}</td>
-        <td style="padding:8px; border:1px solid #ccc;">${m.mobile}</td>
-        <td style="padding:8px; border:1px solid #ccc;">${m.interest}</td>
-        <td style="padding:8px; border:1px solid #ccc;">${m.memberId}</td>
+      table.innerHTML += `
+        <tr>
+          <td>${m.name}</td>
+          <td>${m.mobile}</td>
+          <td>${m.interest}</td>
+          <td>${m.memberId}</td>
+        </tr>
       `;
-      tbody.appendChild(row);
     });
   } catch (err) {
-    console.error("❌ Error loading members:", err);
+    console.error("Members load error", err);
   }
 }
 
-// -------- Join Form Submit --------
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("joinForm");
-  if (!form) return;
+/* =======================
+   LOAD ACTIVITIES
+======================= */
+async function loadActivities() {
+  try {
+    const res = await fetch(`${BASE_URL}/activities`);
+    const activities = await res.json();
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault(); // Stop page reload
+    const list = document.getElementById("activitiesList");
+    list.innerHTML = "";
 
-    const name = document.getElementById("name").value.trim();
-    const mobile = document.getElementById("mobile").value.trim();
-    const interest = document.getElementById("interest").value;
+    activities.forEach(a => {
+      list.innerHTML += `<li>${a.title || a.name}</li>`;
+    });
+  } catch (err) {
+    console.error("Activities load error", err);
+  }
+}
 
-    if (!name || !mobile || !interest) {
-      alert("⚠️ Please fill all fields");
-      return;
-    }
-
-    try {
-      const res = await fetch(`${BACKEND_URL}/join`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, mobile, interest })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
-        form.reset();
-        loadMembers(); // Reload table
-      } else {
-        alert("❌ " + data.message);
-      }
-
-    } catch (err) {
-      console.error(err);
-      alert("❌ Server error. Try again later.");
-    }
-  });
-
-  // Load members on page load
-  loadMembers();
-});
+/* =======================
+   INIT LOAD
+======================= */
+loadMembers();
+loadActivities();
