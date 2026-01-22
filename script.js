@@ -1,16 +1,18 @@
+// Backend URL
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("joinForm");
   const tableBody = document.getElementById("membersTableBody");
 
-  // Load members dynamically
+  // -------- Load Members Function --------
   async function loadMembers() {
     try {
       const res = await fetch(`${BACKEND_URL}/members`);
       const members = await res.json();
 
       tableBody.innerHTML = "";
+
       if (!members.length) {
         tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No members yet</td></tr>`;
         return;
@@ -28,19 +30,23 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     } catch (err) {
-      console.error(err);
+      console.error("Error loading members:", err);
       tableBody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Error loading members</td></tr>`;
     }
   }
 
-  // Handle join form submit
+  // -------- Form Submit Event --------
   form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Stop page reload
+
     const name = document.getElementById("name").value.trim();
     const mobile = document.getElementById("mobile").value.trim();
     const interest = document.getElementById("interest").value;
 
-    if (!name || !mobile || !interest) return alert("Fill all fields");
+    if (!name || !mobile || !interest) {
+      alert("Please fill all fields");
+      return;
+    }
 
     try {
       const res = await fetch(`${BACKEND_URL}/join`, {
@@ -50,19 +56,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
+
       if (data.success) {
-        alert(`🎉 Joined! Member ID: ${data.memberId}`);
+        alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
         form.reset();
-        loadMembers(); // reload table dynamically
+        loadMembers(); // Reload table automatically
       } else {
         alert("❌ " + data.message);
       }
 
     } catch (err) {
-      console.error(err);
-      alert("❌ Server error");
+      console.error("Server error:", err);
+      alert("❌ Server error. Try again later.");
     }
   });
 
-  loadMembers(); // Initial table load
+  // -------- Initial Members Load --------
+  loadMembers();
 });
