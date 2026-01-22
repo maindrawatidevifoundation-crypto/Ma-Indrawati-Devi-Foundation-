@@ -1,3 +1,4 @@
+alert("SCRIPT CONNECTED")
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
