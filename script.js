@@ -1,29 +1,46 @@
-alert("SCRIPT CONNECTED");
-
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("joinForm");
+  const tableBody = document.getElementById("membersTableBody");
 
-  if (!form) {
-    console.error("Join form not found");
-    return;
+  // Load members dynamically
+  async function loadMembers() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/members`);
+      const members = await res.json();
+
+      tableBody.innerHTML = "";
+      if (!members.length) {
+        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No members yet</td></tr>`;
+        return;
+      }
+
+      members.forEach(m => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${m.name}</td>
+          <td>${m.mobile}</td>
+          <td>${m.interest}</td>
+          <td>${m.memberId}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+    } catch (err) {
+      console.error(err);
+      tableBody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Error loading members</td></tr>`;
+    }
   }
 
-  // =========================
-  // FORM SUBMIT
-  // =========================
+  // Handle join form submit
   form.addEventListener("submit", async (e) => {
-    e.preventDefault(); // 🚫 PAGE RELOAD STOP
-
+    e.preventDefault();
     const name = document.getElementById("name").value.trim();
     const mobile = document.getElementById("mobile").value.trim();
     const interest = document.getElementById("interest").value;
 
-    if (!name || !mobile || !interest) {
-      alert("Please fill all fields");
-      return;
-    }
+    if (!name || !mobile || !interest) return alert("Fill all fields");
 
     try {
       const res = await fetch(`${BACKEND_URL}/join`, {
@@ -33,11 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
-
       if (data.success) {
-        alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
+        alert(`🎉 Joined! Member ID: ${data.memberId}`);
         form.reset();
-        loadMembers(); // 👈 table refresh after submit
+        loadMembers(); // reload table dynamically
       } else {
         alert("❌ " + data.message);
       }
@@ -48,41 +64,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // =========================
-  // LOAD JOINED MEMBERS
-  // =========================
-  async function loadMembers() {
-    try {
-      const res = await fetch(`${BACKEND_URL}/members`);
-      const members = await res.json();
-
-      console.log("Members loaded:", members); // Debug
-
-      const tbody = document.getElementById("membersTableBody");
-      if (!tbody) {
-        console.warn("membersTableBody not found");
-        return;
-      }
-
-      tbody.innerHTML = "";
-
-      members.forEach((m, index) => {
-        const row = `
-          <tr>
-            <td style="padding:8px; border:1px solid #ccc;">${m.name}</td>
-            <td style="padding:8px; border:1px solid #ccc;">${m.mobile}</td>
-            <td style="padding:8px; border:1px solid #ccc;">${m.interest}</td>
-            <td style="padding:8px; border:1px solid #ccc;">${m.memberId}</td>
-          </tr>
-        `;
-        tbody.innerHTML += row;
-      });
-
-    } catch (error) {
-      console.error("Error loading members:", error);
-    }
-  }
-
-  // 🔹 Initial load
-  loadMembers();
+  loadMembers(); // Initial table load
 });
