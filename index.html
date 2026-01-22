@@ -150,49 +150,42 @@ footer { text-align:center; font-size:0.85rem; color:#475569; margin-top:20px; }
 </section>
 
 <!-- JOIN NGO (DYNAMIC) -->
+<!-- JOIN NGO (DYNAMIC) -->
 <section>
-<h2>Join as Volunteer</h2>
-<form id="joinForm">
-  <input type="text" id="name" placeholder="Your Name" required>
-  <input type="text" id="mobile" placeholder="Mobile Number" required>
-  <select id="interest" required>
-    <option value="">Select Interest</option>
-    <option>Teaching</option>
-    <option>Yoga</option>
-    <option>Event Support</option>
-    <option>Office Work</option>
-  </select>
-  <button type="submit">Join Now</button>
-</form>
+  <h2>Join as Volunteer</h2>
+  <form id="joinForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="text" id="mobile" placeholder="Mobile Number" required>
+    <select id="interest" required>
+      <option value="">Select Interest</option>
+      <option>Teaching</option>
+      <option>Yoga</option>
+      <option>Event Support</option>
+      <option>Office Work</option>
+    </select>
+    <button type="submit">Join Now</button>
+  </form>
 
-<h3>Joined Members</h3>
-<h3>Joined Members</h3>
-<table id="memberTable" style="width:100%; border-collapse: collapse;">
-  <thead>
-    <tr style="background:#0f766e; color:white;">
-      <th style="padding:8px; border:1px solid #ccc;">Name</th>
-      <th style="padding:8px; border:1px solid #ccc;">Mobile</th>
-      <th style="padding:8px; border:1px solid #ccc;">Interest</th>
-      <th style="padding:8px; border:1px solid #ccc;">Member ID</th>
-    </tr>
-  </thead>
-  <<table id="memberTable" style="width:100%; border-collapse: collapse;">
-  <thead>
-    <tr style="background:#0f766e; color:white;">
-      <th style="padding:8px; border:1px solid #ccc;">Name</th>
-      <th style="padding:8px; border:1px solid #ccc;">Mobile</th>
-      <th style="padding:8px; border:1px solid #ccc;">Interest</th>
-      <th style="padding:8px; border:1px solid #ccc;">Member ID</th>
-    </tr>
-  </thead>
-  <tbody id="membersTableBody">
-    <!-- Dynamic rows appear here -->
-  </tbody>
-    <!-- Dynamic rows will appear here -->
-  
-</table>
-
+  <h3>Joined Members</h3>
+  <table id="memberTable" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background:#0f766e; color:white;">
+        <th style="padding:8px; border:1px solid #ccc;">Name</th>
+        <th style="padding:8px; border:1px solid #ccc;">Mobile</th>
+        <th style="padding:8px; border:1px solid #ccc;">Interest</th>
+        <th style="padding:8px; border:1px solid #ccc;">Member ID</th>
+      </tr>
+    </thead>
+    <tbody id="membersTableBody">
+      <!-- Dynamic rows appear here -->
+    </tbody>
+  </table>
 </section>
+
+<!-- Link your script at the end of body -->
+<script src="script.js"></script>
+
+
 
 <!-- LOCATION -->
 <section>
