@@ -81,3 +81,10 @@ async function loadMembers() {
     console.error("Error loading members:", error);
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("joinForm");
+
+  // form submit code (as it is)
+
+  loadMembers(); // 👈 YAHAN
+});
