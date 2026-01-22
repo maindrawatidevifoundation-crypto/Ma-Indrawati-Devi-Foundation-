@@ -1,5 +1,5 @@
-alert("SCRIPT CONNECTED")
-form.reset();
+alert("SCRIPT CONNECTED");
+
 const BACKEND_URL = "https://indufoundation-backend-11.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // =========================
+  // FORM SUBMIT
+  // =========================
   form.addEventListener("submit", async (e) => {
     e.preventDefault(); // 🚫 PAGE RELOAD STOP
 
@@ -36,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.success) {
         alert(`🎉 Joined successfully! Member ID: ${data.memberId}`);
         form.reset();
+        loadMembers(); // 👈 MEMBERS TABLE UPDATE
       } else {
         alert("❌ " + data.message);
       }
@@ -45,46 +49,41 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("❌ Server error");
     }
   });
-});
-// =========================
-// LOAD JOINED MEMBERS
-// =========================
 
-async function loadMembers() {
-  try {
-    const res = await fetch(`${BACKEND_URL}/members`);
-    const members = await res.json();
+  // =========================
+  // LOAD JOINED MEMBERS
+  // =========================
+  async function loadMembers() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/members`);
+      const members = await res.json();
 
-    const tbody = document.getElementById("membersTableBody");
+      const tbody = document.getElementById("membersTableBody");
+      if (!tbody) {
+        console.warn("membersTableBody not found");
+        return;
+      }
 
-    if (!tbody) {
-      console.warn("membersTableBody not found");
-      return;
+      tbody.innerHTML = "";
+
+      members.forEach((m, index) => {
+        const row = `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${m.name}</td>
+            <td>${m.mobile}</td>
+            <td>${m.interest}</td>
+            <td>${m.memberId}</td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+
+    } catch (error) {
+      console.error("Error loading members:", error);
     }
-
-    tbody.innerHTML = "";
-
-    members.forEach((m, index) => {
-      const row = `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${m.name}</td>
-          <td>${m.mobile}</td>
-          <td>${m.interest}</td>
-          <td>${m.memberId}</td>
-        </tr>
-      `;
-      tbody.innerHTML += row;
-    });
-
-  } catch (error) {
-    console.error("Error loading members:", error);
   }
-}
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("joinForm");
 
-  // form submit code (as it is)
-
-  loadMembers(); // 👈 YAHAN
+  // INITIAL CALL
+  loadMembers();
 });
