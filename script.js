@@ -46,3 +46,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+// =========================
+// LOAD JOINED MEMBERS
+// =========================
+
+async function loadMembers() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/members`);
+    const members = await res.json();
+
+    const tbody = document.getElementById("membersTableBody");
+
+    if (!tbody) {
+      console.warn("membersTableBody not found");
+      return;
+    }
+
+    tbody.innerHTML = "";
+
+    members.forEach((m, index) => {
+      const row = `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${m.name}</td>
+          <td>${m.mobile}</td>
+          <td>${m.interest}</td>
+          <td>${m.memberId}</td>
+        </tr>
+      `;
+      tbody.innerHTML += row;
+    });
+
+  } catch (error) {
+    console.error("Error loading members:", error);
+  }
+}
