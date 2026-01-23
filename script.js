@@ -24,7 +24,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
       result.message || "Joined successfully ✅";
 
     document.getElementById("joinForm").reset();
-    loadMembers(); // auto refresh table
+    loadMembers();
   } catch (err) {
     document.getElementById("joinMsg").innerText = "Error joining ❌";
   }
@@ -38,7 +38,7 @@ async function loadMembers() {
     const res = await fetch(`${BASE_URL}/members`);
     const members = await res.json();
 
-    const table = document.getElementById("membersTable");
+    const table = document.getElementById("membersTableBody");
     table.innerHTML = "";
 
     members.forEach(m => {
@@ -57,26 +57,6 @@ async function loadMembers() {
 }
 
 /* =======================
-   LOAD ACTIVITIES
-======================= */
-async function loadActivities() {
-  try {
-    const res = await fetch(`${BASE_URL}/activities`);
-    const activities = await res.json();
-
-    const list = document.getElementById("activitiesList");
-    list.innerHTML = "";
-
-    activities.forEach(a => {
-      list.innerHTML += `<li>${a.title || a.name}</li>`;
-    });
-  } catch (err) {
-    console.error("Activities load error", err);
-  }
-}
-
-/* =======================
-   INIT LOAD
+   INIT
 ======================= */
 loadMembers();
-loadActivities();
