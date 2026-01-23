@@ -40,8 +40,17 @@ async function loadMembers() {
 
     const table = document.getElementById("membersTableBody");
     table.innerHTML = "";
-
-    members.forEach(m => {
+members.forEach(m => {
+  table.innerHTML += `
+    <tr>
+      <td>${m.name}</td>
+      <td>${m.mobile}</td>
+      <td>${m.interest}</td>
+      <td>${m.memberId || "N/A"}</td>  <!-- fallback -->
+    </tr>
+  `;
+});
+(m => {
       table.innerHTML += `
         <tr>
           <td>${m.name}</td>
