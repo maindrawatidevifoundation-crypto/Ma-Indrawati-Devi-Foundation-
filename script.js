@@ -1,8 +1,6 @@
 const BASE_URL = "https://indufoundation-backend-11.onrender.com";
 
-/* =======================
-   JOIN FORM
-======================= */
+/* JOIN FORM */
 document.getElementById("joinForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -30,9 +28,7 @@ document.getElementById("joinForm").addEventListener("submit", async (e) => {
   }
 });
 
-/* =======================
-   LOAD MEMBERS
-======================= */
+/* LOAD MEMBERS */
 async function loadMembers() {
   try {
     const res = await fetch(`${BASE_URL}/members`);
@@ -40,23 +36,14 @@ async function loadMembers() {
 
     const table = document.getElementById("membersTableBody");
     table.innerHTML = "";
-members.forEach(m => {
-  table.innerHTML += `
-    <tr>
-      <td>${m.name}</td>
-      <td>${m.mobile}</td>
-      <td>${m.interest}</td>
-      <td>${m.memberId || "N/A"}</td>  <!-- fallback -->
-    </tr>
-  `;
-});
-(m => {
+
+    members.forEach(m => {
       table.innerHTML += `
         <tr>
-          <td>${m.name}</td>
-          <td>${m.mobile}</td>
-          <td>${m.interest}</td>
-          <td>${m.memberId}</td>
+          <td style="padding:8px; border:1px solid #ccc;">${m.name}</td>
+          <td style="padding:8px; border:1px solid #ccc;">${m.mobile}</td>
+          <td style="padding:8px; border:1px solid #ccc;">${m.interest}</td>
+          <td style="padding:8px; border:1px solid #ccc;">${m.memberId || "N/A"}</td>
         </tr>
       `;
     });
@@ -65,7 +52,5 @@ members.forEach(m => {
   }
 }
 
-/* =======================
-   INIT
-======================= */
+/* INIT */
 loadMembers();
